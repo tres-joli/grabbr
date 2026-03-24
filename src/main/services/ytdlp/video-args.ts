@@ -15,6 +15,7 @@ function videoArgs(
   args.push('--print', 'before_dl:%(title)s')
   args.push('--print', 'after_move:filepath')
   args.push('--js-runtimes', 'node')
+  args.push('--restrict-filenames', '--format-sort', 'vcodec:h264')
 
   if (required.cookiesFilePath) args.push('--cookies', required.cookiesFilePath)
 
@@ -28,7 +29,6 @@ function videoArgs(
       '--embed-metadata',
       '--embed-thumbnail',
       '--embed-chapters',
-      '--write-subs',
       '--embed-subs',
       '--no-playlist',
       '--no-overwrites',
@@ -167,7 +167,6 @@ function videoArgs(
 
   // FILESYSTEM OPTIONS
   const f = custom.filesystem
-  args.push('--restrict-filenames')
   if (f.batchFile) args.push('--batch-file', f.batchFile)
   if (f.noBatchFile) args.push('--no-batch-file')
   if (f.paths) {

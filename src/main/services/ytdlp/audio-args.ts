@@ -16,6 +16,7 @@ function audioArgs(
   args.push('--print', 'after_move:filepath')
   args.push('--js-runtimes', 'node')
   args.push('--extract-audio')
+  args.push('--restrict-filenames')
 
   if (required.cookiesFilePath) args.push('--cookies', required.cookiesFilePath)
 
@@ -28,7 +29,6 @@ function audioArgs(
       '0',
       '--audio-format',
       'mp3',
-      '--embed-thumbnail',
       '--embed-metadata',
       '--embed-chapters',
       '--no-playlist',
@@ -157,7 +157,6 @@ function audioArgs(
 
   // FILESYSTEM OPTIONS
   const fs = custom.filesystem
-  args.push('--restrict-filenames')
   if (fs.batchFile) args.push('--batch-file', fs.batchFile)
   if (fs.noBatchFile) args.push('--no-batch-file')
   if (fs.noRestrictFilenames) args.push('--no-restrict-filenames')

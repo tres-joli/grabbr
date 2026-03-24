@@ -127,7 +127,6 @@ declare global {
       }
       output?: string
       outputNaPlaceholder?: string
-      restrictFilenames: boolean
       noRestrictFilenames?: boolean
       windowsFilenames?: boolean
       noWindowsFilenames?: boolean

@@ -6,12 +6,5 @@ export default defineConfig({
   semi: false,
   trailingComma: 'none',
   endOfLine: 'lf',
-  ignorePatterns: [
-    'out',
-    'dist',
-    'pnpm-lock.yaml',
-    'LICENSE.md',
-    'tsconfig.json',
-    'tsconfig.*.json'
-  ]
+  ignorePatterns: ['node_modules/**/*', 'out', 'dist', 'bun.lock']
 })

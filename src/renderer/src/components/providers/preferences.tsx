@@ -30,8 +30,7 @@ function PreferencesProvider({ children }: { children: React.ReactNode }): React
         videoSelection: { noPlaylist: true },
         filesystem: {
           noOverwrites: true,
-          noPart: true,
-          restrictFilenames: true
+          noPart: true
         }
       }
     },
@@ -51,8 +50,7 @@ function PreferencesProvider({ children }: { children: React.ReactNode }): React
         videoSelection: { noPlaylist: true },
         filesystem: {
           noOverwrites: true,
-          noPart: true,
-          restrictFilenames: true
+          noPart: true
         }
       }
     }

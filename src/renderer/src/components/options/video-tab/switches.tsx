@@ -26,10 +26,15 @@ function Switches(): React.JSX.Element {
               <HugeiconsIcon icon={InformationCircleIcon} size={16} />
             </TooltipTrigger>
             <TooltipContent>
-              Supported containers:{' '}
-              <span className="font-medium">
-                {THUMB_EMBED_VIDEO_FMTS.toString().replaceAll(',', ', ').toUpperCase()}
-              </span>
+              <p>
+                Supported containers:{' '}
+                <span className="font-medium">
+                  {THUMB_EMBED_VIDEO_FMTS.toString().replaceAll(',', ', ').toUpperCase()}.
+                </span>
+              </p>
+              <p className="text-destructive font-semibold">
+                May fail in some cases due to soft enforced h264.
+              </p>
             </TooltipContent>
           </Tooltip>
         </div>

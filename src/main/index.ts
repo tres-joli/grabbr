@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow } from 'electron'
+import { app, shell, BrowserWindow, Menu } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../build/icon.png?asset'
@@ -47,6 +47,10 @@ function createWindow(): Electron.BrowserWindow {
 app.whenReady().then(function () {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.grabbr')
+
+  if (!is.dev) {
+    Menu.setApplicationMenu(null)
+  }
 
   // Default open or close DevTools by F12 in development
   // and ignore CommandOrControl + R in production.

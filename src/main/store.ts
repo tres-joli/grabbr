@@ -21,8 +21,7 @@ const store = new Store<Preferences>({
         videoSelection: { noPlaylist: true },
         filesystem: {
           noOverwrites: true,
-          noPart: true,
-          restrictFilenames: true
+          noPart: true
         }
       }
     },
@@ -42,8 +41,7 @@ const store = new Store<Preferences>({
         videoSelection: { noPlaylist: true },
         filesystem: {
           noOverwrites: true,
-          noPart: true,
-          restrictFilenames: true
+          noPart: true
         }
       }
     }

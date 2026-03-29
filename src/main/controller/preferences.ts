@@ -1,11 +1,15 @@
 import { store } from '../store'
 
-function getPreferences(): Preferences {
+export function getPreferences() {
   return store.store
 }
 
-function setPreference<K extends keyof PreferenceMap>(key: K, value: PreferenceMap[K]): void {
+export function setPreference<K extends keyof PreferenceMap>(key: K, value: PreferenceMap[K]) {
+  console.info('store:', key, '-', value)
   store.set(key, value)
 }
 
-export { getPreferences, setPreference }
+export function clearPreferences() {
+  console.info('Preferences cleared')
+  store.clear()
+}

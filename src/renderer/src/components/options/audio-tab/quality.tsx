@@ -40,10 +40,10 @@ const QUALITIES = [
   }
 ]
 
-function Quality(): React.JSX.Element {
+export function Quality() {
   const { preferences, updatePreference } = usePreferences()
-  const { audio } = preferences
 
+  const { audio } = preferences
   const isBest = audio.preset === 'best'
   const isQualityConfigurable = QLTY_CHNG_AUDIO_FMTS.includes(
     audio.custom.postProcessing.audioFormat
@@ -89,5 +89,3 @@ function Quality(): React.JSX.Element {
     </div>
   )
 }
-
-export { Quality }

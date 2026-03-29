@@ -2,7 +2,7 @@ import { Loading03Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { cn } from '@renderer/lib/utils'
 
-function Spinner({ className, ...props }: React.ComponentProps<HugeiconsIcon>): React.JSX.Element {
+function Spinner({ className, ...props }: React.ComponentProps<HugeiconsIcon>) {
   return (
     <HugeiconsIcon
       icon={Loading03Icon}

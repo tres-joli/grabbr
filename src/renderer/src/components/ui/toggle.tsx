@@ -28,7 +28,7 @@ function Toggle({
   variant = 'default',
   size = 'default',
   ...props
-}: TogglePrimitive.Props & VariantProps<typeof toggleVariants>): React.JSX.Element {
+}: TogglePrimitive.Props & VariantProps<typeof toggleVariants>) {
   return (
     <TogglePrimitive
       data-slot="toggle"

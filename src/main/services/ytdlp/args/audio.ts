@@ -1,26 +1,12 @@
-import { QLTY_CHNG_AUDIO_FMTS, THUMB_EMBED_AUDIO_FMTS } from '../../../shared/constants'
-import { FFMPEG } from '../binary-paths'
+import { QLTY_CHNG_AUDIO_FMTS, THUMB_EMBED_AUDIO_FMTS } from '../../../../shared/constants'
 
-function audioArgs(
-  url: string,
-  preferences: AudioPreferences,
-  required: { outTemplate: string; cookiesFilePath: string | undefined }
-): string[] {
+export function audioArgs(preferences: AudioPreferences) {
   const args: string[] = []
   const { preset, custom } = preferences
 
-  // Mandatory fields validation
-  args.push('--ffmpeg-location', FFMPEG)
-  args.push('--output', required.outTemplate)
-  args.push('--print', 'before_dl:%(title)s')
-  args.push('--print', 'after_move:filepath')
-  args.push('--js-runtimes', 'node')
   args.push('--extract-audio')
-  args.push('--restrict-filenames')
 
-  if (required.cookiesFilePath) args.push('--cookies', required.cookiesFilePath)
-
-  // Handle preset "best" configuration for audio
+  // Preset - Best
   if (preset === 'best') {
     args.push(
       '-f',
@@ -36,11 +22,8 @@ function audioArgs(
       '--no-part'
     )
 
-    args.push(url)
     return args
   }
-
-  // Custom preferences processing for audio
 
   // GENERAL OPTIONS
   if (custom.general) {
@@ -228,9 +211,9 @@ function audioArgs(
   if (pp.usePostprocessor) args.push('--use-postprocessor', pp.usePostprocessor)
 
   // RAW ARGS & OPTIONS
-  if (custom?.rawArgs) args.push(...custom.rawArgs)
+  if (custom.rawArgs) args.push(...custom.rawArgs)
 
-  if (custom?.rawOptions) {
+  if (custom.rawOptions) {
     for (const [key, value] of Object.entries(custom.rawOptions)) {
       if (typeof value === 'boolean') {
         if (value) args.push(`--${key}`)
@@ -240,9 +223,5 @@ function audioArgs(
     }
   }
 
-  // Add URL at the end for custom preset
-  args.push(url)
   return args
 }
-
-export { audioArgs }

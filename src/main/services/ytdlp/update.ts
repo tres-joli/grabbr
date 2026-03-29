@@ -1,7 +1,7 @@
 import { exec } from 'node:child_process'
 import { YT_DLP } from '../binary-paths'
 
-async function update(): Promise<{ alreadyLatest: boolean; version: string }> {
+export async function update(): Promise<{ alreadyLatest: boolean; version: string }> {
   console.info('Starting yt-dlp update...')
 
   return new Promise(function (resolve, reject) {
@@ -11,10 +11,12 @@ async function update(): Promise<{ alreadyLatest: boolean; version: string }> {
       async function (error, stdout, stderr) {
         if (error) {
           console.error(error)
+
           return reject(error)
         }
         if (stderr) {
           console.error(`ytdlp stderr: ${stderr}`)
+
           return reject(new Error(stderr))
         }
 
@@ -27,7 +29,7 @@ async function update(): Promise<{ alreadyLatest: boolean; version: string }> {
   })
 }
 
-async function getVersion(): Promise<string> {
+export async function getVersion(): Promise<string> {
   return new Promise(function (resolve, reject) {
     exec(
       `"${YT_DLP}" --version`,
@@ -35,10 +37,12 @@ async function getVersion(): Promise<string> {
       function (error, stdout, stderr) {
         if (error) {
           console.error(error)
+
           return reject(error)
         }
         if (stderr) {
           console.error(`ytdlp stderr: ${stderr}`)
+
           return reject(new Error(stderr))
         }
 
@@ -47,5 +51,3 @@ async function getVersion(): Promise<string> {
     )
   })
 }
-
-export { update, getVersion }

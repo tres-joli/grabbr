@@ -1,11 +1,13 @@
 import Store from 'electron-store'
 
-const store = new Store<Preferences>({
+export const store = new Store<Preferences>({
   defaults: {
     type: 'audio',
     downloadMode: 'ask',
     downloadDirectory: '',
     cookiesFilePath: '',
+    postProcess: false,
+    sortFormat: true,
     audio: {
       preset: 'best',
       custom: {
@@ -30,13 +32,22 @@ const store = new Store<Preferences>({
       custom: {
         videoFormat: {
           format: 'bv+ba/best',
-          mergeOutputFormat: 'mp4'
+          mergeOutputFormat: 'mp4',
+          formatSort: { vcodec: 'h264' }
         },
         postProcessing: {
           embedThumbnail: true,
           embedMetadata: true,
           embedChapters: true,
-          postOverwrites: true
+          postOverwrites: true,
+          ffmpeg: {
+            target: 'ffmpeg:',
+            encoder: 'cpu',
+            preset: 'ultrafast',
+            videoCodec: 'libx264',
+            audioCodec: 'aac',
+            crf: 23
+          }
         },
         videoSelection: { noPlaylist: true },
         filesystem: {
@@ -47,5 +58,3 @@ const store = new Store<Preferences>({
     }
   }
 })
-
-export { store }

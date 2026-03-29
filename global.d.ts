@@ -346,7 +346,7 @@ declare global {
   interface BaseVideoPreferences extends BaseRootPreferences {
     videoFormat: {
       format: string
-      formatSort?: string
+      formatSort: FormatSortMap
       formatSortForce?: boolean
       noFormatSortForce?: boolean
       videoMultistreams?: boolean
@@ -392,7 +392,6 @@ declare global {
         | 'opus'
         | 'vorbis'
         | 'wav'
-        | string
       recodeVideo?:
         | 'avi'
         | 'flv'
@@ -412,8 +411,7 @@ declare global {
         | 'opus'
         | 'vorbis'
         | 'wav'
-        | string
-      postprocessorArgs?: string
+      ffmpeg: FFmpegAPI
       keepVideo?: boolean
       noKeepVideo?: boolean
       postOverwrites: boolean
@@ -437,7 +435,7 @@ declare global {
       exec?: string
       noExec?: boolean
       convertSubs?: 'ass' | 'lrc' | 'srt' | 'vtt' | 'none'
-      convertThumbnails?: 'jpg' | 'png' | 'webp' | 'none' | string
+      convertThumbnails?: 'jpg' | 'png' | 'webp' | 'none'
       splitChapters?: boolean
       noSplitChapters?: boolean
       removeChapters?: string
@@ -464,7 +462,125 @@ declare global {
     downloadDirectory: string
     audio: AudioPreferences
     video: VideoPreferences
+    postProcess: boolean
+    sortFormat: boolean
     cookiesFilePath?: string
+  }
+
+  type VideoCodec = 'h264' | 'h265' | 'hevc' | 'vp9' | 'vp8' | 'av1' | 'avc' | (string & {})
+  type AudioCodec = 'aac' | 'opus' | 'mp3' | 'vorbis' | 'flac' | 'mp4a' | (string & {})
+  type HDRType = 'DV' | 'HDR12' | 'HDR10+' | 'HDR10' | 'HLG' | 'SDR'
+  type Protocol = 'https' | 'http' | 'm3u8_native' | 'm3u8' | 'dash' | 'ftp' | (string & {})
+  type Extension = 'mp4' | 'webm' | 'mkv' | 'mov' | 'flv' | (string & {})
+
+  type FormatSortField =
+    | 'hasvid'
+    | 'hasaud'
+    | 'ie_pref'
+    | 'lang'
+    | 'quality'
+    | 'source'
+    | 'proto'
+    | 'vcodec'
+    | 'acodec'
+    | 'vext'
+    | 'aext'
+    | 'ext'
+    | 'filesize'
+    | 'fs_approx'
+    | 'size'
+    | 'height'
+    | 'width'
+    | 'res'
+    | 'fps'
+    | 'hdr'
+    | 'channels'
+    | 'asr'
+    | 'samplerate'
+    | 'tbr'
+    | 'vbr'
+    | 'abr'
+    | 'br'
+    | 'bitrate'
+
+  type FormatSortModifier = '+' | '-' | '~' | '^' | '!'
+
+  type FormatSortFieldValue<F extends FormatSortField> = F extends 'vcodec'
+    ? VideoCodec
+    : F extends 'acodec'
+      ? AudioCodec
+      : F extends 'hdr'
+        ? HDRType
+        : F extends 'proto'
+          ? Protocol
+          : F extends 'ext' | 'vext' | 'aext'
+            ? Extension
+            : F extends
+                  | 'height'
+                  | 'width'
+                  | 'res'
+                  | 'fps'
+                  | 'channels'
+                  | 'asr'
+                  | 'samplerate'
+                  | 'tbr'
+                  | 'vbr'
+                  | 'abr'
+                  | 'br'
+                  | 'bitrate'
+                  | 'filesize'
+                  | 'fs_approx'
+                  | 'size'
+              ? number
+              : F extends 'hasvid' | 'hasaud'
+                ? boolean
+                : string
+
+  type FormatSortMap = {
+    [F in FormatSortField]?: FormatSortFieldValue<F>
+  }
+
+  type FFmpegPreset =
+    | 'ultrafast'
+    | 'superfast'
+    | 'veryfast'
+    | 'faster'
+    | 'fast'
+    | 'medium'
+    | 'slow'
+    | 'slower'
+    | 'veryslow'
+
+  type FFmpegVideoCodec = 'libx264' | 'libx265' | 'libvpx-vp9' | 'libaom-av1' | 'copy'
+
+  type FFmpegVideoCodecGPU =
+    | 'h264_nvenc'
+    | 'hevc_nvenc'
+    | 'h264_amf'
+    | 'hevc_amf'
+    | 'h264_qsv'
+    | 'hevc_qsv'
+    | 'av1_nvenc'
+    | 'av1_amf'
+
+  type FFmpegAudioCodec = 'aac' | 'libmp3lame' | 'libopus' | 'libvorbis' | 'flac' | 'copy'
+
+  type FFmpegTarget =
+    | 'ffmpeg:'
+    | 'ffmpeg-merge:'
+    | 'ffmpeg-post_process:'
+    | 'ffmpeg-extract-audio:'
+    | 'ffmpeg-embed-thumbnail:'
+    | 'ffmpeg-embed-subs:'
+
+  type FFmpegAPI = {
+    target: FFmpegTarget
+    encoder: 'cpu' | 'gpu'
+    videoCodec: FFmpegVideoCodec | FFmpegVideoCodecGPU
+    audioCodec: FFmpegAudioCodec
+    crf: number
+    preset: FFmpegPreset
+    extraArgs?: string
   }
 
   type DeepKeyOf<T> = {

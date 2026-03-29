@@ -10,13 +10,13 @@ import { Type } from './components/type'
 import { useIpc } from './components/use-ipc'
 import { isValidUrl } from '../../shared/utils'
 
-function App(): React.JSX.Element {
+export function App() {
   const [url, setUrl] = useState('')
   const { preferences, prefLoading } = usePreferences()
 
   useIpc()
 
-  async function startDownload(): Promise<void> {
+  async function startDownload() {
     const normalizedUrl = url.trim()
     if (!isValidUrl(normalizedUrl)) {
       toast.warning('Invalid URL', { richColors: true })
@@ -82,5 +82,3 @@ function App(): React.JSX.Element {
     </div>
   )
 }
-
-export default App

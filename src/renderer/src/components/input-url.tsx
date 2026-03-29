@@ -10,14 +10,10 @@ import { ClipboardPaste } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { isValidUrl } from '../../../shared/utils'
 
-function InputUrl({
-  url,
-  setUrl
-}: {
-  url: string
-  setUrl: (url: string) => void
-}): React.JSX.Element {
-  async function pasteLink(): Promise<void> {
+type InputUrlType = { url: string; setUrl: (url: string) => void }
+
+export function InputUrl({ url, setUrl }: InputUrlType) {
+  async function pasteLink() {
     try {
       const url = await navigator.clipboard.readText()
       if (!isValidUrl(url)) {
@@ -40,8 +36,8 @@ function InputUrl({
           placeholder="Enter or Paste YouTube/Instagram URL"
           className="font-mono font-medium"
           value={url}
-          onChange={function (e) {
-            setUrl(e.target.value)
+          onChange={function (event) {
+            setUrl(event.target.value)
           }}
         />
       </ContextMenuTrigger>
@@ -53,5 +49,3 @@ function InputUrl({
     </ContextMenu>
   )
 }
-
-export { InputUrl }

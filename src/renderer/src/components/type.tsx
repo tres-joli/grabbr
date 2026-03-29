@@ -3,7 +3,7 @@ import { usePreferences } from './providers/preferences'
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group'
 import { FlimSlateIcon, MusicNote04Icon } from '@hugeicons/core-free-icons'
 
-function Type(): React.JSX.Element {
+export function Type() {
   const { preferences, updatePreference } = usePreferences()
 
   return (
@@ -24,5 +24,3 @@ function Type(): React.JSX.Element {
     </ToggleGroup>
   )
 }
-
-export { Type }

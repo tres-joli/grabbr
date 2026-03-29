@@ -1,6 +1,6 @@
 import { cn } from '@renderer/lib/utils'
 
-function Label({ className, ...props }: React.ComponentProps<'label'>): React.JSX.Element {
+function Label({ className, ...props }: React.ComponentProps<'label'>) {
   return (
     <label
       data-slot="label"

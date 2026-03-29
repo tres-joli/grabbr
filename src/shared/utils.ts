@@ -1,4 +1,4 @@
-function isValidUrl(url: string): boolean {
+export function isValidUrl(url: string) {
   try {
     const { hostname, pathname, searchParams } = new URL(url)
 
@@ -52,5 +52,3 @@ function isValidUrl(url: string): boolean {
     return false
   }
 }
-
-export { isValidUrl }

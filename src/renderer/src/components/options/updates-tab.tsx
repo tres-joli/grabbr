@@ -8,14 +8,14 @@ import { Spinner } from '../ui/spinner'
 
 const YTDLP_VERSION_KEY = 'ytdlp-version'
 
-function UpdatesTab(): React.JSX.Element {
+export function UpdatesTab() {
   const [isLoading, setIsLoading] = useState(false)
   const [ytdlpVersion, setYtdlpVersion] = useState<string>(function () {
     return localStorage.getItem(YTDLP_VERSION_KEY) ?? '...'
   })
 
   useEffect(function () {
-    async function getYtdlpVersion(): Promise<void> {
+    async function getYtdlpVersion() {
       try {
         const version = await window.api.ytdlpVersion()
         setYtdlpVersion(version)
@@ -30,7 +30,7 @@ function UpdatesTab(): React.JSX.Element {
     }
   }, [])
 
-  async function updateYtdlp(): Promise<void> {
+  async function updateYtdlp() {
     setIsLoading(true)
     try {
       const { version, alreadyLatest } = await window.api.ytdlpUpdate()
@@ -80,5 +80,3 @@ function UpdatesTab(): React.JSX.Element {
     </Card>
   )
 }
-
-export { UpdatesTab }

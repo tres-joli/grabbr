@@ -5,16 +5,19 @@ type ContextType = {
   preferences: Preferences
   updatePreference: <K extends keyof PreferenceMap>(key: K, value: PreferenceMap[K]) => void
   prefLoading: boolean
+  reloadPreferences: () => Promise<void>
 }
 
 const PreferencesContext = createContext<ContextType | null>(null)
 
-function PreferencesProvider({ children }: { children: React.ReactNode }): React.JSX.Element {
+export function PreferencesProvider({ children }: { children: React.ReactNode }) {
   const [preferences, setPreferences] = useState<Preferences>({
     type: 'audio',
     downloadMode: 'ask',
     downloadDirectory: '',
     cookiesFilePath: '',
+    sortFormat: false,
+    postProcess: false,
     audio: {
       preset: 'best',
       custom: {
@@ -39,13 +42,22 @@ function PreferencesProvider({ children }: { children: React.ReactNode }): React
       custom: {
         videoFormat: {
           format: 'bv+ba/best',
-          mergeOutputFormat: 'mp4'
+          mergeOutputFormat: 'mp4',
+          formatSort: { vcodec: 'h264' }
         },
         postProcessing: {
           embedThumbnail: true,
           embedChapters: true,
           embedMetadata: true,
-          postOverwrites: true
+          postOverwrites: true,
+          ffmpeg: {
+            target: 'ffmpeg:',
+            encoder: 'cpu',
+            preset: 'ultrafast',
+            videoCodec: 'libx264',
+            audioCodec: 'aac',
+            crf: 23
+          }
         },
         videoSelection: { noPlaylist: true },
         filesystem: {
@@ -57,18 +69,18 @@ function PreferencesProvider({ children }: { children: React.ReactNode }): React
   })
   const [prefLoading, setPrefLoading] = useState(true)
 
-  useEffect(function () {
-    async function loadPreferences(): Promise<void> {
-      try {
-        const savedPreferences = await window.api.getPreferences()
-        setPreferences(savedPreferences)
-      } catch {
-        toast.error('Failed to load preferences')
-      } finally {
-        setPrefLoading(false)
-      }
+  async function loadPreferences(): Promise<void> {
+    try {
+      const savedPreferences = await window.api.getPreferences()
+      setPreferences(savedPreferences)
+    } catch {
+      toast.error('Failed to load preferences')
+    } finally {
+      setPrefLoading(false)
     }
+  }
 
+  useEffect(function () {
     loadPreferences()
   }, [])
 
@@ -96,7 +108,8 @@ function PreferencesProvider({ children }: { children: React.ReactNode }): React
       value={{
         preferences,
         updatePreference,
-        prefLoading
+        prefLoading,
+        reloadPreferences: loadPreferences
       }}
     >
       {children}
@@ -104,12 +117,10 @@ function PreferencesProvider({ children }: { children: React.ReactNode }): React
   )
 }
 
-function usePreferences(): ContextType {
+export function usePreferences() {
   const context = useContext(PreferencesContext)
   if (!context) {
     throw new Error('usePreferences must be used within a PreferencesProvider')
   }
   return context
 }
-
-export { PreferencesProvider, usePreferences }

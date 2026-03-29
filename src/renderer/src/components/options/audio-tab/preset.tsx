@@ -4,8 +4,9 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { AiMagicIcon } from '@hugeicons/core-free-icons'
 import { usePreferences } from '../../providers/preferences'
 
-function Preset(): React.JSX.Element {
+export function Preset() {
   const { preferences, updatePreference } = usePreferences()
+
   const { audio } = preferences
 
   return (
@@ -36,5 +37,3 @@ function Preset(): React.JSX.Element {
     </div>
   )
 }
-
-export { Preset }

@@ -9,7 +9,7 @@ import {
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 
-function Toaster({ ...props }: ToasterProps): React.JSX.Element {
+function Toaster({ ...props }: ToasterProps) {
   const { theme = 'system' } = useTheme()
 
   return (

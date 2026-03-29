@@ -2,14 +2,19 @@ import { spawn } from 'child_process'
 import fs from 'fs'
 import { join } from 'path'
 import { store } from '../../store'
-import { audioArgs } from './audio-args'
-import { videoArgs } from './video-args'
 import { YT_DLP } from '../binary-paths'
 import { activeDownloadProcesses, cancelledDownloads } from '../procs'
 import { isValidUrl } from '../../../shared/utils'
+import { buildArgs } from './args'
 
-function download(url: string, directoryPath: string, callbacks: DownloadCallbacksType): void {
+export async function download(
+  url: string,
+  directoryPath: string,
+  callbacks: DownloadCallbacksType
+) {
+  // Generate a unique ID for each download
   const id = crypto.randomUUID()
+
   // Validation
   if (!isValidUrl(url)) {
     callbacks.onError(id, 'Invalid URL', url)
@@ -25,6 +30,7 @@ function download(url: string, directoryPath: string, callbacks: DownloadCallbac
     }
   } catch (error) {
     console.error(error)
+
     callbacks.onError(id, 'Invalid Directory', url)
     return
   }
@@ -41,14 +47,7 @@ function download(url: string, directoryPath: string, callbacks: DownloadCallbac
   // Initialization
   callbacks.onInit(id)
 
-  const type = store.get('type')
-  const audioPreferences = store.get('audio')
-  const videoPreferences = store.get('video')
-  const args =
-    type === 'audio'
-      ? audioArgs(url, audioPreferences, { outTemplate, cookiesFilePath })
-      : videoArgs(url, videoPreferences, { outTemplate, cookiesFilePath })
-  console.info(`Args: ${args.join(' ')}`)
+  const args = await buildArgs(url, { outTemplate, cookiesFilePath })
 
   const proc = spawn(YT_DLP, args, { windowsHide: true })
 
@@ -88,6 +87,7 @@ function download(url: string, directoryPath: string, callbacks: DownloadCallbac
   proc.on('close', function (code) {
     if (cancelledDownloads.has(id)) {
       console.info(`Download Cancelled: ${name}`)
+
       cleanup()
       callbacks.onCancel(id, name)
       return
@@ -95,10 +95,12 @@ function download(url: string, directoryPath: string, callbacks: DownloadCallbac
 
     if (code === 0) {
       console.info(`Download completed: ${name}`)
+
       cleanup()
       callbacks.onComplete(id, name, filePath)
     } else {
       console.error(`yt-dlp exited with code: ${code}`)
+
       cleanup()
       callbacks.onError(id, name, 'Something went wrong')
     }
@@ -113,12 +115,13 @@ function download(url: string, directoryPath: string, callbacks: DownloadCallbac
   // Process Error
   proc.on('error', function (error) {
     console.error(`yt-dlp process error: ${error.message}`)
+
     cleanup()
     callbacks.onError(id, name, error.message)
   })
 }
 
-function cancel(id: string): void {
+export function cancel(id: string) {
   const proc = activeDownloadProcesses.get(id)
   if (!proc) {
     return
@@ -136,5 +139,3 @@ function cancel(id: string): void {
     console.error(`Error killing ytdlp process: ${error}`)
   }
 }
-
-export { download, cancel }

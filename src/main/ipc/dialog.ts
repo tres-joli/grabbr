@@ -1,7 +1,7 @@
 import { dialog, ipcMain, shell } from 'electron'
 import fs from 'fs'
 
-function registerDialogIpc(win: Electron.BrowserWindow): void {
+export function registerDialogIpc(win: Electron.BrowserWindow) {
   ipcMain.handle('select-folder', async function () {
     console.info('Opening dialog to select folder')
     const { canceled, filePaths } = await dialog.showOpenDialog(win, {
@@ -62,5 +62,3 @@ function registerDialogIpc(win: Electron.BrowserWindow): void {
     }
   })
 }
-
-export { registerDialogIpc }

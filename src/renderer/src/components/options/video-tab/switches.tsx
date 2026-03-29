@@ -5,10 +5,10 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { InformationCircleIcon } from '@hugeicons/core-free-icons'
 import { THUMB_EMBED_VIDEO_FMTS } from '../../../../../shared/constants'
 
-function Switches(): React.JSX.Element {
+export function Switches() {
   const { preferences, updatePreference } = usePreferences()
-  const { video } = preferences
 
+  const { video } = preferences
   const isBest = video.preset === 'best'
   const isThumbnailConfigurable = THUMB_EMBED_VIDEO_FMTS.includes(
     video.custom.videoFormat.mergeOutputFormat
@@ -26,15 +26,10 @@ function Switches(): React.JSX.Element {
               <HugeiconsIcon icon={InformationCircleIcon} size={16} />
             </TooltipTrigger>
             <TooltipContent>
-              <p>
-                Supported containers:{' '}
-                <span className="font-medium">
-                  {THUMB_EMBED_VIDEO_FMTS.toString().replaceAll(',', ', ').toUpperCase()}.
-                </span>
-              </p>
-              <p className="text-destructive font-semibold">
-                May fail in some cases due to soft enforced h264.
-              </p>
+              Supported containers:{' '}
+              <span className="font-medium">
+                {THUMB_EMBED_VIDEO_FMTS.toString().replaceAll(',', ', ').toUpperCase()}
+              </span>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -42,7 +37,7 @@ function Switches(): React.JSX.Element {
           <Switch
             checked={video.custom.postProcessing.embedThumbnail}
             onCheckedChange={function (value) {
-              updatePreference('audio.custom.postProcessing.embedThumbnail', value)
+              updatePreference('video.custom.postProcessing.embedThumbnail', value)
             }}
             disabled={isBest || !isThumbnailConfigurable}
           />
@@ -83,5 +78,3 @@ function Switches(): React.JSX.Element {
     </>
   )
 }
-
-export { Switches }

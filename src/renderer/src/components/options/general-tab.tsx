@@ -9,17 +9,21 @@ import {
   Folder01Icon,
   ComputerIcon,
   Sun03Icon,
-  Moon02Icon
+  Moon02Icon,
+  Tick02Icon
 } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { usePreferences } from '../providers/preferences'
+import { useState } from 'react'
 
-function GeneralTab(): React.JSX.Element {
+export function GeneralTab() {
   const { theme, setTheme } = useTheme()
-  const { preferences, updatePreference } = usePreferences()
+  const { preferences, updatePreference, reloadPreferences } = usePreferences()
+  const [prefReset, setPrefReset] = useState(false)
+
   const { downloadMode, downloadDirectory } = preferences
 
-  async function selectDownloadDirectory(): Promise<void> {
+  async function selectDownloadDirectory() {
     try {
       const selectedPath = await window.api.selectFolder()
       if (selectedPath) {
@@ -32,6 +36,15 @@ function GeneralTab(): React.JSX.Element {
       toast.error('Failed to select download location')
       updatePreference('downloadMode', 'ask')
     }
+  }
+
+  async function resetPreferences() {
+    setPrefReset(true)
+    window.api.clearPreferences()
+    await reloadPreferences()
+    setTimeout(function () {
+      setPrefReset(false)
+    }, 6000)
   }
 
   return (
@@ -94,9 +107,13 @@ function GeneralTab(): React.JSX.Element {
             {downloadDirectory && <Button onClick={selectDownloadDirectory}>Change</Button>}
           </div>
         </div>
+        <div className="space-y-1">
+          <div className="font-medium">Reset Options</div>
+          <Button onClick={resetPreferences} disabled={prefReset}>
+            {!prefReset ? 'Reset' : <HugeiconsIcon icon={Tick02Icon} strokeWidth={2} />}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   )
 }
-
-export { GeneralTab }

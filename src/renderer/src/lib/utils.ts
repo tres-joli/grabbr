@@ -1,10 +1,9 @@
-import { clsx, type ClassValue } from 'clsx'
+import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
+import type { ClassValue } from 'clsx'
 
-function cn(...inputs: ClassValue[]): string {
+export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-const isDev = import.meta.env.DEV
-
-export { isDev, cn }
+export const isDev = import.meta.env.DEV

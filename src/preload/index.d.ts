@@ -21,6 +21,7 @@ declare global {
     onDownloadCancel: (callback: (payload: DownloadCancelPayload) => void) => void
     getPreferences: () => Promise<Preferences>
     setPreference: (key: string, value: unknown) => void
+    clearPreferences: () => void
     openExternalUrl: (url: string) => void
     showItemInFolder: (fullPath: string) => void
     ytdlpVersion: () => Promise<string>

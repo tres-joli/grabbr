@@ -6,15 +6,17 @@ import { setupUpdater } from './updater'
 import { registerIpc } from './ipc'
 import { activeDownloadProcesses } from './services/procs'
 
-function createWindow(): Electron.BrowserWindow {
+function createWindow() {
   console.info('Creating main window')
+
   const mainWindow = new BrowserWindow({
     width: 950,
     height: 670,
     show: false,
     minWidth: 950,
-    minHeight: 670,
+    minHeight: 720,
     autoHideMenuBar: true,
+    center: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
@@ -61,6 +63,7 @@ app.whenReady().then(function () {
 
   const mainWindow = createWindow()
 
+  // Register updater and IPC handlers
   setupUpdater(mainWindow)
   registerIpc(mainWindow)
 
@@ -82,6 +85,7 @@ app.on('window-all-closed', function () {
   }
 })
 
+// Before quit, kill all active download processes
 app.on('before-quit', function () {
   for (const [, proc] of activeDownloadProcesses) {
     try {

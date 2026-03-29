@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
 import { getVersion, update } from '../services/ytdlp/update'
 
-function registerYtdlpIpc(): void {
+export function registerYtdlpIpc() {
   ipcMain.handle('ytdlp-update', async function () {
     return await update()
   })
@@ -10,5 +10,3 @@ function registerYtdlpIpc(): void {
     return await getVersion()
   })
 }
-
-export { registerYtdlpIpc }

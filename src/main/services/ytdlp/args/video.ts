@@ -1,33 +1,18 @@
-import { THUMB_EMBED_VIDEO_FMTS } from '../../../shared/constants'
-import { FFMPEG } from '../binary-paths'
+import { THUMB_EMBED_VIDEO_FMTS } from '../../../../shared/constants'
 
-function videoArgs(
-  url: string,
-  preferences: VideoPreferences,
-  required: { outTemplate: string; cookiesFilePath: string | undefined }
-): string[] {
+export function videoArgs(preferences: VideoPreferences) {
   const args: string[] = []
   const { preset, custom } = preferences
 
-  // Mandatory fields validation
-  args.push('--ffmpeg-location', FFMPEG)
-  args.push('--output', required.outTemplate)
-  args.push('--print', 'before_dl:%(title)s')
-  args.push('--print', 'after_move:filepath')
-  args.push('--js-runtimes', 'node')
-  args.push('--restrict-filenames', '--format-sort', 'vcodec:h264')
-
-  if (required.cookiesFilePath) args.push('--cookies', required.cookiesFilePath)
-
-  // Handle preset "best" configuration for video
+  // Preset Best
   if (preset === 'best') {
     args.push(
       '-f',
       'bestvideo+bestaudio/best',
       '--merge-output-format',
       'mp4',
-      '--embed-metadata',
       '--embed-thumbnail',
+      '--embed-metadata',
       '--embed-chapters',
       '--embed-subs',
       '--no-playlist',
@@ -35,11 +20,8 @@ function videoArgs(
       '--no-part'
     )
 
-    args.push(url)
     return args
   }
-
-  // Custom preferences processing for video
 
   // GENERAL OPTIONS
   if (custom.general) {
@@ -343,7 +325,6 @@ function videoArgs(
   const vf = custom.videoFormat
   args.push('--format', vf.format)
   args.push('--merge-output-format', vf.mergeOutputFormat)
-  if (vf.formatSort) args.push('--format-sort', vf.formatSort)
   if (vf.formatSortForce) args.push('--format-sort-force')
   if (vf.noFormatSortForce) args.push('--no-format-sort-force')
   if (vf.videoMultistreams) args.push('--video-multistreams')
@@ -381,7 +362,6 @@ function videoArgs(
   }
   if (pp.remuxVideo) args.push('--remux-video', pp.remuxVideo)
   if (pp.recodeVideo) args.push('--recode-video', pp.recodeVideo)
-  if (pp.postprocessorArgs) args.push('--postprocessor-args', pp.postprocessorArgs)
   if (pp.keepVideo) args.push('--keep-video')
   if (pp.noKeepVideo) args.push('--no-keep-video')
   if (pp.postOverwrites) args.push('--post-overwrites')
@@ -426,9 +406,5 @@ function videoArgs(
     })
   }
 
-  // Add URL at the end
-  args.push(url)
   return args
 }
-
-export { videoArgs }

@@ -30,7 +30,7 @@ function ToggleGroup({
   VariantProps<typeof toggleVariants> & {
     spacing?: number
     orientation?: 'horizontal' | 'vertical'
-  }): React.JSX.Element {
+  }) {
   return (
     <ToggleGroupPrimitive
       data-slot="toggle-group"
@@ -65,7 +65,7 @@ function ToggleGroupItem({
   variant = 'outline',
   size = 'default',
   ...props
-}: TogglePrimitive.Props & VariantProps<typeof toggleVariants>): React.JSX.Element {
+}: TogglePrimitive.Props & VariantProps<typeof toggleVariants>) {
   const context = useContext(ToggleGroupContext)
 
   return (

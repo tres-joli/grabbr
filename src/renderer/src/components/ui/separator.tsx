@@ -1,11 +1,7 @@
 import { Separator as SeparatorPrimitive } from '@base-ui/react/separator'
 import { cn } from '@renderer/lib/utils'
 
-function Separator({
-  className,
-  orientation = 'horizontal',
-  ...props
-}: SeparatorPrimitive.Props): React.JSX.Element {
+function Separator({ className, orientation = 'horizontal', ...props }: SeparatorPrimitive.Props) {
   return (
     <SeparatorPrimitive
       data-slot="separator"

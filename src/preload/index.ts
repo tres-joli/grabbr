@@ -61,6 +61,9 @@ const api = {
   setPreference(key: string, value: unknown) {
     return ipcRenderer.send('set-preference', key, value)
   },
+  clearPreferences() {
+    return ipcRenderer.send('clear-preferences')
+  },
   openExternalUrl(url: string) {
     return ipcRenderer.send('open-external-url', url)
   },

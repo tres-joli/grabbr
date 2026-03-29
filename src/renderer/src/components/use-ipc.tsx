@@ -3,7 +3,7 @@ import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { Button } from './ui/button'
 
-function useIpc(): void {
+export function useIpc() {
   useEffect(function () {
     // Auto-update listeners should only be active in production
     if (!isDev) {
@@ -170,5 +170,3 @@ function useIpc(): void {
     }
   }, [])
 }
-
-export { useIpc }

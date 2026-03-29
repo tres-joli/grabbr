@@ -4,7 +4,7 @@ import { Format } from './format'
 import { Quality } from './quality'
 import { Switches } from './switches'
 
-function AudioTab(): React.JSX.Element {
+export function AudioTab() {
   return (
     <Card className="h-full">
       <CardContent className="space-y-6">
@@ -16,5 +16,3 @@ function AudioTab(): React.JSX.Element {
     </Card>
   )
 }
-
-export { AudioTab }

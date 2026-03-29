@@ -9,8 +9,10 @@ import { Dialog, DialogTrigger, DialogContent } from '../ui/dialog'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { UpdatesTab } from './updates-tab'
+import { EncodingTab } from './encoding-tab'
+import { SortingTab } from './sorting-tab'
 
-function Options(): React.JSX.Element {
+export function Options() {
   const { preferences } = usePreferences()
 
   return (
@@ -27,6 +29,8 @@ function Options(): React.JSX.Element {
           <TabsList>
             <TabsTrigger value="audio">Audio</TabsTrigger>
             <TabsTrigger value="video">Video</TabsTrigger>
+            <TabsTrigger value="sorting">Sorting</TabsTrigger>
+            <TabsTrigger value="encoding">Encoding</TabsTrigger>
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="updates">Updates</TabsTrigger>
             <TabsTrigger
@@ -42,6 +46,12 @@ function Options(): React.JSX.Element {
           <TabsContent value="video">
             <VideoTab />
           </TabsContent>
+          <TabsContent value="sorting">
+            <SortingTab />
+          </TabsContent>
+          <TabsContent value="encoding">
+            <EncodingTab />
+          </TabsContent>
           <TabsContent value="general">
             <GeneralTab />
           </TabsContent>
@@ -56,5 +66,3 @@ function Options(): React.JSX.Element {
     </Dialog>
   )
 }
-
-export { Options }

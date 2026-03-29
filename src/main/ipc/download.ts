@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
 import { cancelDownload, startDownload } from '../controller/download'
 
-function registerDownloadIpc(win: Electron.BrowserWindow): void {
+export function registerDownloadIpc(win: Electron.BrowserWindow) {
   ipcMain.on('start-download', function (_event, url: string, directoryPath: string) {
     startDownload(url, directoryPath, {
       onInit: function (id) {
@@ -26,5 +26,3 @@ function registerDownloadIpc(win: Electron.BrowserWindow): void {
     cancelDownload(id)
   })
 }
-
-export { registerDownloadIpc }

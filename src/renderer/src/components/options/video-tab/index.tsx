@@ -4,7 +4,7 @@ import { Preset } from './preset'
 import { Quality } from './quality'
 import { Switches } from './switches'
 
-function VideoTab(): React.JSX.Element {
+export function VideoTab() {
   return (
     <Card className="h-full">
       <CardContent className="space-y-6">
@@ -16,5 +16,3 @@ function VideoTab(): React.JSX.Element {
     </Card>
   )
 }
-
-export { VideoTab }

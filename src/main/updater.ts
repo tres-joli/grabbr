@@ -2,7 +2,7 @@ import AutoUpdater from 'electron-updater'
 
 const { autoUpdater } = AutoUpdater
 
-function setupUpdater(win: Electron.BrowserWindow): void {
+export function setupUpdater(win: Electron.BrowserWindow) {
   autoUpdater.on('update-available', function () {
     win.webContents.send('update-available')
   })
@@ -17,5 +17,3 @@ function setupUpdater(win: Electron.BrowserWindow): void {
 
   autoUpdater.checkForUpdatesAndNotify()
 }
-
-export { setupUpdater }

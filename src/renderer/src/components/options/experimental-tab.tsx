@@ -5,11 +5,12 @@ import { Folder01Icon, LinkSquare02Icon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { usePreferences } from '../providers/preferences'
 
-function ExperimentalTab(): React.JSX.Element {
+export function ExperimentalTab() {
   const { preferences, updatePreference } = usePreferences()
+
   const { cookiesFilePath } = preferences
 
-  async function chooseCookiesFilePath(): Promise<void> {
+  async function chooseCookiesFilePath() {
     try {
       const selectedFilePath = await window.api.selectFile({
         name: 'Text File',
@@ -24,7 +25,7 @@ function ExperimentalTab(): React.JSX.Element {
     }
   }
 
-  async function removeCookiesFilePath(): Promise<void> {
+  async function removeCookiesFilePath() {
     updatePreference('cookiesFilePath', '')
   }
 
@@ -100,5 +101,3 @@ function ExperimentalTab(): React.JSX.Element {
     </Card>
   )
 }
-
-export { ExperimentalTab }

@@ -103,10 +103,10 @@ const formats = [
   }
 ]
 
-function Format(): React.JSX.Element {
+export function Format() {
   const { preferences, updatePreference } = usePreferences()
-  const { audio } = preferences
 
+  const { audio } = preferences
   const isBest = audio.preset === 'best'
 
   return (
@@ -133,5 +133,3 @@ function Format(): React.JSX.Element {
     </div>
   )
 }
-
-export { Format }

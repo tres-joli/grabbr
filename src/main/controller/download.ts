@@ -1,11 +1,13 @@
 import { cancel, download } from '../services/ytdlp/download'
 
-function startDownload(url: string, directoryPath: string, callbacks: DownloadCallbacksType): void {
+export function startDownload(
+  url: string,
+  directoryPath: string,
+  callbacks: DownloadCallbacksType
+) {
   download(url, directoryPath, callbacks)
 }
 
-function cancelDownload(id: string): void {
+export function cancelDownload(id: string) {
   cancel(id)
 }
-
-export { startDownload, cancelDownload }

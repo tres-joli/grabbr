@@ -55,10 +55,10 @@ const QUALITIES = [
   }
 ]
 
-function Quality(): React.JSX.Element {
+export function Quality() {
   const { preferences, updatePreference } = usePreferences()
-  const { video } = preferences
 
+  const { video } = preferences
   const isBest = video.preset === 'best'
 
   return (
@@ -85,4 +85,3 @@ function Quality(): React.JSX.Element {
     </div>
   )
 }
-export { Quality }

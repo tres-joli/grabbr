@@ -1,7 +1,7 @@
 import { ipcMain } from 'electron'
-import { getPreferences, setPreference } from '../controller/preferences'
+import { clearPreferences, getPreferences, setPreference } from '../controller/preferences'
 
-function registerPreferencesIpc(): void {
+export function registerPreferencesIpc() {
   ipcMain.handle('get-preferences', function () {
     return getPreferences()
   })
@@ -11,6 +11,8 @@ function registerPreferencesIpc(): void {
   >(_event: Electron.IpcMainEvent, key: K, value: PreferenceMap[K]) {
     setPreference(key, value)
   })
-}
 
-export { registerPreferencesIpc }
+  ipcMain.on('clear-preferences', function () {
+    clearPreferences()
+  })
+}

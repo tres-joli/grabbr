@@ -5,10 +5,10 @@ import { InformationCircleIcon } from '@hugeicons/core-free-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@renderer/components/ui/tooltip'
 import { THUMB_EMBED_AUDIO_FMTS } from '../../../../../shared/constants'
 
-function Switches(): React.JSX.Element {
+export function Switches() {
   const { preferences, updatePreference } = usePreferences()
-  const { audio } = preferences
 
+  const { audio } = preferences
   const isBest = audio.preset === 'best'
   const isThumbnailConfigurable = THUMB_EMBED_AUDIO_FMTS.includes(
     audio.custom.postProcessing.audioFormat
@@ -78,5 +78,3 @@ function Switches(): React.JSX.Element {
     </>
   )
 }
-
-export { Switches }

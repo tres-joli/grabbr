@@ -3,10 +3,8 @@ import AutoUpdater from 'electron-updater'
 
 const { autoUpdater } = AutoUpdater
 
-function registerUpdaterIpc(): void {
+export function registerUpdaterIpc() {
   ipcMain.on('quit-and-install-update', function () {
     autoUpdater.quitAndInstall()
   })
 }
-
-export { registerUpdaterIpc }

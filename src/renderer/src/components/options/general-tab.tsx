@@ -15,26 +15,23 @@ import {
 import { HugeiconsIcon } from '@hugeicons/react'
 import { usePreferences } from '../providers/preferences'
 import { useState } from 'react'
+import { DownloadModeEnum } from '../../../../shared/constants/preferences'
 
 export function GeneralTab() {
   const { theme, setTheme } = useTheme()
   const { preferences, updatePreference, reloadPreferences } = usePreferences()
   const [prefReset, setPrefReset] = useState(false)
 
-  const { downloadMode, downloadDirectory } = preferences
+  const { downloadMode, base } = preferences
 
   async function selectDownloadDirectory() {
-    try {
-      const selectedPath = await window.api.selectFolder()
-      if (selectedPath) {
-        updatePreference('downloadDirectory', selectedPath)
-        toast.success('Download Location Selected')
-      } else if (!downloadDirectory) {
-        updatePreference('downloadMode', 'ask')
+    const selectedPath = await window.api.selectFolder()
+    if (selectedPath) {
+      updatePreference('base.filesystem.output', selectedPath)
+      if (downloadMode !== DownloadModeEnum.SELECT) {
+        updatePreference('downloadMode', DownloadModeEnum.SELECT)
       }
-    } catch {
-      toast.error('Failed to select download location')
-      updatePreference('downloadMode', 'ask')
+      toast.success('Download Location Selected')
     }
   }
 
@@ -54,8 +51,8 @@ export function GeneralTab() {
           <div className="font-medium">Theme</div>
           <ToggleGroup
             value={[theme!]}
-            onValueChange={function (value) {
-              setTheme(value[0])
+            onValueChange={function ([value]) {
+              setTheme(value)
             }}
           >
             <ToggleGroupItem value="system">
@@ -74,37 +71,43 @@ export function GeneralTab() {
           <div className="flex items-center gap-2">
             <ToggleGroup
               value={[downloadMode]}
-              onValueChange={function (value) {
-                updatePreference('downloadMode', value[0] as any)
+              onValueChange={function ([value]) {
+                if (value === DownloadModeEnum.SELECT) {
+                  selectDownloadDirectory()
+                } else {
+                  updatePreference('downloadMode', value as DownloadModeEnum)
+                }
               }}
             >
-              <ToggleGroupItem value="ask">
+              <ToggleGroupItem value={DownloadModeEnum.ASK}>
                 <HugeiconsIcon icon={HelpCircleIcon} /> Ask Each Time
               </ToggleGroupItem>
-              {downloadDirectory ? (
+              {downloadMode === DownloadModeEnum.SELECT ? (
                 <Tooltip>
                   <TooltipTrigger
                     render={
-                      <ToggleGroupItem value="select">
+                      <ToggleGroupItem value={DownloadModeEnum.SELECT}>
                         <HugeiconsIcon icon={Folder01Icon} className="mr-0.5" />
-                        {downloadDirectory.length > 15
-                          ? `${downloadDirectory.slice(0, 15)}...`
-                          : downloadDirectory}
+                        {base.filesystem.output.length > 15
+                          ? `${base.filesystem.output.slice(0, 15)}...`
+                          : base.filesystem.output}
                       </ToggleGroupItem>
                     }
                   />
                   <TooltipContent>
-                    <p>{downloadDirectory}</p>
+                    <p>{base.filesystem.output}</p>
                   </TooltipContent>
                 </Tooltip>
               ) : (
-                <ToggleGroupItem value="select" onClick={selectDownloadDirectory}>
+                <ToggleGroupItem value={DownloadModeEnum.SELECT}>
                   <HugeiconsIcon icon={Folder01Icon} />
                   Select
                 </ToggleGroupItem>
               )}
             </ToggleGroup>
-            {downloadDirectory && <Button onClick={selectDownloadDirectory}>Change</Button>}
+            {downloadMode === DownloadModeEnum.SELECT && (
+              <Button onClick={selectDownloadDirectory}>Change</Button>
+            )}
           </div>
         </div>
         <div className="space-y-1">

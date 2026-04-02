@@ -13,6 +13,6 @@
     "paths": {
       "@renderer/*": ["./src/renderer/src/*"]
     },
-    "types": ["./global.d.ts"]
+    "types": ["./types/preferences.d.ts", "./types/ytdlp.d.ts", "./types/ffmpeg.d.ts"]
   }
 }

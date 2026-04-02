@@ -1,41 +1,42 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/tooltip'
 import { ToggleGroup, ToggleGroupItem } from '../../ui/toggle-group'
 import { usePreferences } from '../../providers/preferences'
-import { QLTY_CHNG_AUDIO_FMTS } from '../../../../../shared/constants'
 import { InformationCircleIcon } from '@hugeicons/core-free-icons'
 import { HugeiconsIcon } from '@hugeicons/react'
+import { QLTY_CHNG_AUDIO_FMTS } from '../../../../../shared/constants/conditional'
+import { AudioQualityEnum } from '../../../../../shared/constants/ytdlp'
 
-const QUALITIES = [
+const QUALITIES: { value: AudioQualityEnum; name: string }[] = [
   {
-    value: '320k',
+    value: AudioQualityEnum['320K'],
     name: '320K'
   },
   {
-    value: '256k',
+    value: AudioQualityEnum['256K'],
     name: '256K'
   },
   {
-    value: '224k',
+    value: AudioQualityEnum['224K'],
     name: '224K'
   },
   {
-    value: '192k',
+    value: AudioQualityEnum['192K'],
     name: '192K'
   },
   {
-    value: '160k',
+    value: AudioQualityEnum['160K'],
     name: '160K'
   },
   {
-    value: '128k',
+    value: AudioQualityEnum['128K'],
     name: '128K'
   },
   {
-    value: '96k',
+    value: AudioQualityEnum['96K'],
     name: '96K'
   },
   {
-    value: '64k',
+    value: AudioQualityEnum['64K'],
     name: '64K'
   }
 ]
@@ -43,11 +44,10 @@ const QUALITIES = [
 export function Quality() {
   const { preferences, updatePreference } = usePreferences()
 
-  const { audio } = preferences
-  const isBest = audio.preset === 'best'
-  const isQualityConfigurable = QLTY_CHNG_AUDIO_FMTS.includes(
-    audio.custom.postProcessing.audioFormat
-  )
+  const { audioFormat, audioQuality } = preferences.audio.custom.postProcessing
+
+  const isBest = preferences.audio.preset === 'best'
+  const isQualityConfigurable = QLTY_CHNG_AUDIO_FMTS.includes(audioFormat)
 
   return (
     <div className="space-y-1">
@@ -69,9 +69,9 @@ export function Quality() {
       </div>
       <ToggleGroup
         disabled={!isQualityConfigurable || isBest}
-        value={[audio.custom.postProcessing.audioQuality]}
-        onValueChange={function (value) {
-          updatePreference('audio.custom.postProcessing.audioQuality', value[0] as any)
+        value={[audioQuality]}
+        onValueChange={function ([value]) {
+          updatePreference('audio.custom.postProcessing.audioQuality', value as AudioQualityEnum)
         }}
       >
         <Tooltip>

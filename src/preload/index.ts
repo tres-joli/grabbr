@@ -3,6 +3,7 @@ import { electronAPI } from '@electron-toolkit/preload'
 
 // Custom APIs for renderer
 const api = {
+  // Update
   onUpdateAvailable(cb: () => void) {
     return ipcRenderer.on('update-available', function () {
       return cb()
@@ -21,11 +22,10 @@ const api = {
   quitAndInstallUpdate() {
     return ipcRenderer.send('quit-and-install-update')
   },
-  selectFolder() {
-    return ipcRenderer.invoke('select-folder')
-  },
-  startDownload(url: string, directoryPath: string) {
-    return ipcRenderer.send('start-download', url, directoryPath)
+
+  // Download
+  startDownload(url: string) {
+    return ipcRenderer.send('start-download', url)
   },
   cancelDownload(id: string) {
     return ipcRenderer.send('cancel-download', id)
@@ -55,6 +55,8 @@ const api = {
       return cb(payload)
     })
   },
+
+  // Preferences
   getPreferences() {
     return ipcRenderer.invoke('get-preferences')
   },
@@ -64,20 +66,27 @@ const api = {
   clearPreferences() {
     return ipcRenderer.send('clear-preferences')
   },
-  openExternalUrl(url: string) {
-    return ipcRenderer.send('open-external-url', url)
-  },
-  showItemInFolder(fullPath: string) {
-    return ipcRenderer.send('show-item-in-folder', fullPath)
-  },
+
+  // yt-dlp
   ytdlpVersion() {
     return ipcRenderer.invoke('ytdlp-version')
   },
   ytdlpUpdate() {
     return ipcRenderer.invoke('ytdlp-update')
   },
+
+  // Dialog & Shell
   selectFile(options?: { name: string; extensions: string[] }) {
     return ipcRenderer.invoke('select-file', options)
+  },
+  selectFolder() {
+    return ipcRenderer.invoke('select-folder')
+  },
+  showItemInFolder(fullPath: string) {
+    return ipcRenderer.send('show-item-in-folder', fullPath)
+  },
+  openExternalUrl(url: string) {
+    return ipcRenderer.send('open-external-url', url)
   }
 }
 

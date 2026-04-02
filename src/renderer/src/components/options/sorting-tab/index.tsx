@@ -9,7 +9,7 @@ import { Codec } from './codec'
 export function SortingTab() {
   const { preferences, updatePreference } = usePreferences()
 
-  const { sortFormat } = preferences
+  const { enabled } = preferences.video.custom.videoFormat.formatSort
 
   return (
     <Card className="h-full">
@@ -35,9 +35,9 @@ export function SortingTab() {
           </div>
           <div>
             <Switch
-              checked={sortFormat}
+              checked={enabled}
               onCheckedChange={function (value) {
-                updatePreference('sortFormat', value)
+                updatePreference('video.custom.videoFormat.formatSort.enabled', value)
               }}
             />
           </div>

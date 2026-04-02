@@ -3,16 +3,16 @@ import { usePreferences } from '../../providers/preferences'
 import { Switch } from '../../ui/switch'
 import { InformationCircleIcon } from '@hugeicons/core-free-icons'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@renderer/components/ui/tooltip'
-import { THUMB_EMBED_AUDIO_FMTS } from '../../../../../shared/constants'
+import { THUMB_EMBED_AUDIO_FMTS } from '../../../../../shared/constants/conditional'
 
 export function Switches() {
   const { preferences, updatePreference } = usePreferences()
 
-  const { audio } = preferences
-  const isBest = audio.preset === 'best'
-  const isThumbnailConfigurable = THUMB_EMBED_AUDIO_FMTS.includes(
-    audio.custom.postProcessing.audioFormat
-  )
+  const { audioFormat, embedChapters, embedMetadata, embedThumbnail } =
+    preferences.audio.custom.postProcessing
+
+  const isBest = preferences.audio.preset === 'best'
+  const isThumbnailConfigurable = THUMB_EMBED_AUDIO_FMTS.includes(audioFormat)
 
   return (
     <>
@@ -35,7 +35,7 @@ export function Switches() {
         </div>
         <div>
           <Switch
-            checked={audio.custom.postProcessing.embedThumbnail}
+            checked={embedThumbnail}
             onCheckedChange={function (value) {
               updatePreference('audio.custom.postProcessing.embedThumbnail', value)
             }}
@@ -55,7 +55,7 @@ export function Switches() {
         </div>
         <div>
           <Switch
-            checked={audio.custom.postProcessing.embedChapters}
+            checked={embedChapters}
             onCheckedChange={function (value) {
               updatePreference('audio.custom.postProcessing.embedChapters', value)
             }}
@@ -67,7 +67,7 @@ export function Switches() {
         <div className={`${isBest && 'opacity-50'} font-medium`}>Embed Metadata</div>
         <div>
           <Switch
-            checked={audio.custom.postProcessing.embedMetadata}
+            checked={embedMetadata}
             onCheckedChange={function (value) {
               updatePreference('audio.custom.postProcessing.embedMetadata', value)
             }}

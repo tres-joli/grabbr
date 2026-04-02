@@ -2,20 +2,20 @@ import { usePreferences } from '@renderer/components/providers/preferences'
 import { Card, CardContent } from '@renderer/components/ui/card'
 import { Switch } from '@renderer/components/ui/switch'
 import { VideoCodec } from './video-codec'
-import { Speed } from './speed'
-import { Crf } from './crf'
-// import { Encoder } from './encoder'
+// import { Speed } from './speed'
+// import { Crf } from './crf'
+import { Encoder } from './encoder'
 
 export function EncodingTab() {
   const { preferences, updatePreference } = usePreferences()
 
-  const { postProcess } = preferences
+  const { enabled } = preferences.video.custom.postProcessing.postProcessorArgs
 
   return (
     <Card className="h-full">
       <CardContent className="space-y-6">
         <div className="space-y-1">
-          {!postProcess && (
+          {!enabled && (
             <p className="text-destructive text-base mb-4">
               Note: Enabling this setting re-encodes the video, which is resource-intensive, can
               significantly slow down the download process, and may make your PC feel slow/laggy. If
@@ -25,18 +25,18 @@ export function EncodingTab() {
           )}
           <div className="font-medium">Encoding</div>
           <Switch
-            checked={postProcess}
+            checked={enabled}
             onCheckedChange={function (value) {
-              updatePreference('postProcess', value)
+              updatePreference('video.custom.postProcessing.postProcessorArgs.enabled', value)
             }}
           />
         </div>
-        {postProcess && (
+        {enabled && (
           <>
-            {/* <Encoder /> */}
+            <Encoder />
             <VideoCodec />
-            <Speed />
-            <Crf />
+            {/* <Speed /> */}
+            {/* <Crf /> */}
           </>
         )}
       </CardContent>

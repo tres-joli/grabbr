@@ -3,16 +3,16 @@ import { Switch } from '../../ui/switch'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@renderer/components/ui/tooltip'
 import { HugeiconsIcon } from '@hugeicons/react'
 import { InformationCircleIcon } from '@hugeicons/core-free-icons'
-import { THUMB_EMBED_VIDEO_FMTS } from '../../../../../shared/constants'
+import { THUMB_EMBED_VIDEO_FMTS } from '../../../../../shared/constants/conditional'
 
 export function Switches() {
   const { preferences, updatePreference } = usePreferences()
 
-  const { video } = preferences
-  const isBest = video.preset === 'best'
-  const isThumbnailConfigurable = THUMB_EMBED_VIDEO_FMTS.includes(
-    video.custom.videoFormat.mergeOutputFormat
-  )
+  const { mergeOutputFormat } = preferences.video.custom.videoFormat
+  const { embedThumbnail, embedChapters, embedMetadata } = preferences.video.custom.postProcessing
+
+  const isBest = preferences.video.preset === 'best'
+  const isThumbnailConfigurable = THUMB_EMBED_VIDEO_FMTS.includes(mergeOutputFormat)
 
   return (
     <>
@@ -35,7 +35,7 @@ export function Switches() {
         </div>
         <div>
           <Switch
-            checked={video.custom.postProcessing.embedThumbnail}
+            checked={embedThumbnail}
             onCheckedChange={function (value) {
               updatePreference('video.custom.postProcessing.embedThumbnail', value)
             }}
@@ -55,7 +55,7 @@ export function Switches() {
         </div>
         <div>
           <Switch
-            checked={preferences.video.custom.postProcessing.embedChapters}
+            checked={embedChapters}
             onCheckedChange={function (value) {
               updatePreference('video.custom.postProcessing.embedChapters', value)
             }}
@@ -67,7 +67,7 @@ export function Switches() {
         <div className={`${isBest && 'opacity-50'} font-medium`}>Embed Metadata</div>
         <div>
           <Switch
-            checked={preferences.video.custom.postProcessing.embedMetadata}
+            checked={embedMetadata}
             onCheckedChange={function (value) {
               updatePreference('video.custom.postProcessing.embedMetadata', value)
             }}

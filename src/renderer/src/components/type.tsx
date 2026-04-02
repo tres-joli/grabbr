@@ -2,15 +2,18 @@ import { HugeiconsIcon } from '@hugeicons/react'
 import { usePreferences } from './providers/preferences'
 import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group'
 import { FlimSlateIcon, MusicNote04Icon } from '@hugeicons/core-free-icons'
+import { MediaTypeEnum } from '../../../shared/constants/preferences'
 
 export function Type() {
   const { preferences, updatePreference } = usePreferences()
 
+  const { type } = preferences
+
   return (
     <ToggleGroup
-      value={[preferences.type]}
-      onValueChange={function (value) {
-        updatePreference('type', value[0] as any)
+      value={[type]}
+      onValueChange={function ([value]) {
+        updatePreference('type', value as MediaTypeEnum)
       }}
     >
       <ToggleGroupItem value="audio">

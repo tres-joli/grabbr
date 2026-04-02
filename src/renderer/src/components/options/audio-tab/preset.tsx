@@ -7,15 +7,15 @@ import { usePreferences } from '../../providers/preferences'
 export function Preset() {
   const { preferences, updatePreference } = usePreferences()
 
-  const { audio } = preferences
+  const { preset } = preferences.audio
 
   return (
     <div className="space-y-1">
       <div className="font-medium">Preset</div>
       <ToggleGroup
-        value={[audio.preset]}
-        onValueChange={function (value) {
-          updatePreference('audio.preset', value[0] as any)
+        value={[preset]}
+        onValueChange={function ([value]) {
+          updatePreference('audio.preset', value as 'best' | 'custom')
         }}
       >
         <Tooltip>

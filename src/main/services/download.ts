@@ -1,56 +1,38 @@
 import { spawn } from 'child_process'
 import fs from 'fs'
-import { join } from 'path'
-import { store } from '../../store'
-import { YT_DLP } from '../binary-paths'
-import { activeDownloadProcesses, cancelledDownloads } from '../procs'
-import { isValidUrl } from '../../../shared/utils'
-import { buildArgs } from './args'
+import { isValidUrl } from '../../shared/utils'
+import { store } from '../store'
+import { YT_DLP } from '../lib/binary-paths'
+import { activeDownloadProcesses, cancelledDownloads } from '../lib/procs'
+import { buildArgs } from '../lib/args'
 
-export async function download(
-  url: string,
-  directoryPath: string,
-  callbacks: DownloadCallbacksType
-) {
-  // Generate a unique ID for each download
+export function startDownload(url: string, callbacks: DownloadCallbacksType) {
+  // Generate an unique ID for download
   const id = crypto.randomUUID()
 
-  // Validation
+  // Validate URL
   if (!isValidUrl(url)) {
     callbacks.onError(id, 'Invalid URL', url)
     return
   }
 
-  let outTemplate: string
-  try {
-    if (fs.existsSync(directoryPath) && fs.statSync(directoryPath).isDirectory()) {
-      outTemplate = join(directoryPath, '%(title)s.%(ext)s')
-    } else {
-      outTemplate = directoryPath.replace(/\.[^.]+$/, '') + '.%(ext)s'
-    }
-  } catch (error) {
-    console.error(error)
-
-    callbacks.onError(id, 'Invalid Directory', url)
+  // Validate cookies file
+  const cookiesFilePath = store.get('base.filesystem.cookies')
+  if (cookiesFilePath && !fs.existsSync(cookiesFilePath)) {
+    callbacks.onError(id, 'Cookies file not found', url)
     return
   }
-  console.info(`Output Template: ${outTemplate}`)
 
-  const cookiesFilePath = store.get('cookiesFilePath')
-  if (cookiesFilePath) {
-    if (!fs.existsSync(cookiesFilePath)) {
-      callbacks.onError(id, 'Cookies file not found', url)
-      return
-    }
-  }
-
-  // Initialization
+  // Initialize
   callbacks.onInit(id)
 
-  const args = await buildArgs(url, { outTemplate, cookiesFilePath })
+  // Build Args
+  const args = buildArgs(url)
 
+  // Spawn yt-dlp
   const proc = spawn(YT_DLP, args, { windowsHide: true })
 
+  // Add this process to active download processes
   activeDownloadProcesses.set(id, proc)
 
   const cleanup = function (): void {
@@ -61,7 +43,7 @@ export async function download(
   let filePath = ''
   let name = ''
 
-  // Start
+  // Start download
   let nameReceived = false
   proc.stdout.on('data', function (chunk: Buffer) {
     const line = chunk.toString().split('\n', 1)[0].trim()
@@ -78,12 +60,12 @@ export async function download(
     }
   })
 
-  // Download Error
+  // Error in download
   proc.stderr.on('data', function (chunk: Buffer) {
     console.error(`ytdlp stderr: ${chunk.toString()}`)
   })
 
-  // Completed (with or without error) or Cancelled
+  // Download completed (with or without error) or cancelled
   proc.on('close', function (code) {
     if (cancelledDownloads.has(id)) {
       console.info(`Download Cancelled: ${name}`)
@@ -105,14 +87,12 @@ export async function download(
       callbacks.onError(id, name, 'Something went wrong')
     }
 
-    if (cookiesFilePath) {
-      if (fs.existsSync(cookiesFilePath)) {
-        fs.rmSync(cookiesFilePath, { force: true })
-      }
+    if (cookiesFilePath && fs.existsSync(cookiesFilePath)) {
+      fs.rmSync(cookiesFilePath, { force: true })
     }
   })
 
-  // Process Error
+  // Error in yt-dlp
   proc.on('error', function (error) {
     console.error(`yt-dlp process error: ${error.message}`)
 
@@ -121,11 +101,9 @@ export async function download(
   })
 }
 
-export function cancel(id: string) {
+export function cancelDownload(id: string) {
   const proc = activeDownloadProcesses.get(id)
-  if (!proc) {
-    return
-  }
+  if (!proc) return
 
   cancelledDownloads.add(id)
 

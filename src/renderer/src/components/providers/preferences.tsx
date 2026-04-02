@@ -1,5 +1,6 @@
 import { toast } from 'sonner'
 import { createContext, useContext, useEffect, useState } from 'react'
+import { DefaultPreferences } from '../../../../shared/constants/preferences'
 
 type ContextType = {
   preferences: Preferences
@@ -11,65 +12,10 @@ type ContextType = {
 const PreferencesContext = createContext<ContextType | null>(null)
 
 export function PreferencesProvider({ children }: { children: React.ReactNode }) {
-  const [preferences, setPreferences] = useState<Preferences>({
-    type: 'audio',
-    downloadMode: 'ask',
-    downloadDirectory: '',
-    cookiesFilePath: '',
-    sortFormat: false,
-    postProcess: false,
-    audio: {
-      preset: 'best',
-      custom: {
-        postProcessing: {
-          extractAudio: true,
-          audioFormat: 'best',
-          audioQuality: '0',
-          embedThumbnail: true,
-          embedChapters: true,
-          embedMetadata: true,
-          postOverwrites: true
-        },
-        videoSelection: { noPlaylist: true },
-        filesystem: {
-          noOverwrites: true,
-          noPart: true
-        }
-      }
-    },
-    video: {
-      preset: 'best',
-      custom: {
-        videoFormat: {
-          format: 'bv+ba/best',
-          mergeOutputFormat: 'mp4',
-          formatSort: { vcodec: 'h264' }
-        },
-        postProcessing: {
-          embedThumbnail: true,
-          embedChapters: true,
-          embedMetadata: true,
-          postOverwrites: true,
-          ffmpeg: {
-            target: 'ffmpeg:',
-            encoder: 'cpu',
-            preset: 'ultrafast',
-            videoCodec: 'libx264',
-            audioCodec: 'aac',
-            crf: 23
-          }
-        },
-        videoSelection: { noPlaylist: true },
-        filesystem: {
-          noOverwrites: true,
-          noPart: true
-        }
-      }
-    }
-  })
+  const [preferences, setPreferences] = useState<Preferences>(DefaultPreferences)
   const [prefLoading, setPrefLoading] = useState(true)
 
-  async function loadPreferences(): Promise<void> {
+  async function loadPreferences() {
     try {
       const savedPreferences = await window.api.getPreferences()
       setPreferences(savedPreferences)
@@ -84,7 +30,7 @@ export function PreferencesProvider({ children }: { children: React.ReactNode })
     loadPreferences()
   }, [])
 
-  function updatePreference(key: string, value: unknown): void {
+  function updatePreference(key: string, value: unknown) {
     window.api.setPreference(key, value)
     setPreferences(function (prev) {
       const keys = key.split('.')

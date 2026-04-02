@@ -4,7 +4,8 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../build/icon.png?asset'
 import { setupUpdater } from './updater'
 import { registerIpc } from './ipc'
-import { activeDownloadProcesses } from './services/procs'
+import { activeDownloadProcesses } from './lib/procs'
+// import { ensureSupportedEncoders } from './lib/system-info'
 
 function createWindow() {
   console.info('Creating main window')
@@ -17,7 +18,7 @@ function createWindow() {
     minHeight: 720,
     autoHideMenuBar: true,
     center: true,
-    ...(process.platform === 'linux' ? { icon } : {}),
+    ...(process.platform === 'linux' && { icon }),
     webPreferences: {
       preload: join(__dirname, '../preload/index.mjs'),
       sandbox: false,
@@ -63,7 +64,8 @@ app.whenReady().then(function () {
 
   const mainWindow = createWindow()
 
-  // Register updater and IPC handlers
+  // Setup updater and register IPC handlers
+  // ensureSupportedEncoders() // GPU encoding is still under development
   setupUpdater(mainWindow)
   registerIpc(mainWindow)
 

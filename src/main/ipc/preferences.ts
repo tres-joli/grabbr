@@ -1,5 +1,5 @@
 import { ipcMain } from 'electron'
-import { clearPreferences, getPreferences, setPreference } from '../controller/preferences'
+import { clearPreferences, getPreferences, setPreference } from '../services/preferences'
 
 export function registerPreferencesIpc() {
   ipcMain.handle('get-preferences', function () {

@@ -1,7 +1,7 @@
 import { exec } from 'node:child_process'
-import { YT_DLP } from '../binary-paths'
+import { YT_DLP } from '../lib/binary-paths'
 
-export async function update(): Promise<{ alreadyLatest: boolean; version: string }> {
+export async function updateYtdlp(): Promise<{ alreadyLatest: boolean; version: string }> {
   console.info('Starting yt-dlp update...')
 
   return new Promise(function (resolve, reject) {

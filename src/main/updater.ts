@@ -1,4 +1,7 @@
+import { app } from 'electron'
 import AutoUpdater from 'electron-updater'
+import { store } from './store'
+import { clearPreferences } from './services/preferences'
 
 const { autoUpdater } = AutoUpdater
 
@@ -16,4 +19,20 @@ export function setupUpdater(win: Electron.BrowserWindow) {
   })
 
   autoUpdater.checkForUpdatesAndNotify()
+
+  resetPreferencesAfterUpdate()
+}
+
+function resetPreferencesAfterUpdate() {
+  const currentVersion = app.getVersion()
+  const lastSeenVersion = store.get('appVersion')
+
+  console.info(`Current version: ${currentVersion}, Last seen version: ${lastSeenVersion}`)
+
+  if (lastSeenVersion.length > 0 && lastSeenVersion !== currentVersion) {
+    clearPreferences()
+    store.set('appVersion', currentVersion)
+
+    console.info('Preferences reset due to app update')
+  }
 }

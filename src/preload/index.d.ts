@@ -7,53 +7,42 @@ declare global {
   }
 
   type API = {
+    // Update
     onUpdateAvailable: (callback: () => void) => void
     onUpdateComplete: (callback: () => void) => void
     onUpdateError: (callback: () => void) => void
     quitAndInstallUpdate: () => void
-    selectFolder: () => Promise<string | null>
-    startDownload: (url: string, directoryPath: string) => void
+
+    // Download
+    startDownload: (url: string) => void
     cancelDownload: (taskId: string) => void
-    onDownloadInit: (callback: (payload: DownloadInitPayload) => void) => void
-    onDownloadStart: (callback: (payload: DownloadStartPayload) => void) => void
-    onDownloadComplete: (callback: (payload: DownloadCompletePayload) => void) => void
-    onDownloadError: (callback: (payload: DownloadErrorPayload) => void) => void
-    onDownloadCancel: (callback: (payload: DownloadCancelPayload) => void) => void
+    onDownloadInit: (callback: (payload: { id: string }) => void) => void
+    onDownloadStart: (
+      callback: (payload: { id: string; name: string; url: string }) => void
+    ) => void
+    onDownloadComplete: (
+      callback: (payload: { id: string; name: string; filePath: string }) => void
+    ) => void
+    onDownloadError: (
+      callback: (payload: { id: string; name: string; message: string }) => void
+    ) => void
+    onDownloadCancel: (
+      callback: (payload: { id: string; name: string; message?: string }) => void
+    ) => void
+
+    // Preferences
     getPreferences: () => Promise<Preferences>
     setPreference: (key: string, value: unknown) => void
     clearPreferences: () => void
-    openExternalUrl: (url: string) => void
-    showItemInFolder: (fullPath: string) => void
+
+    // yt-dlp
     ytdlpVersion: () => Promise<string>
     ytdlpUpdate: () => Promise<{ alreadyLatest: boolean; version: string }>
+
+    // Dialog & Shell
     selectFile: (options?: { name: string; extensions: string[] }) => Promise<string | null>
+    selectFolder: () => Promise<string | null>
+    showItemInFolder: (fullPath: string) => void
+    openExternalUrl: (url: string) => void
   }
-}
-
-type DownloadInitPayload = {
-  id: string
-}
-
-type DownloadStartPayload = {
-  id: string
-  name: string
-  url: string
-}
-
-type DownloadCompletePayload = {
-  id: string
-  name: string
-  filePath: string
-}
-
-type DownloadErrorPayload = {
-  id: string
-  name: string
-  message: string
-}
-
-type DownloadCancelPayload = {
-  id: string
-  name: string
-  message?: string
 }

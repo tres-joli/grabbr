@@ -58,17 +58,18 @@ const QUALITIES = [
 export function Quality() {
   const { preferences, updatePreference } = usePreferences()
 
-  const { video } = preferences
-  const isBest = video.preset === 'best'
+  const { format } = preferences.video.custom.videoFormat
+
+  const isBest = preferences.video.preset === 'best'
 
   return (
     <div className="space-y-1">
       <div className={`${isBest && 'opacity-50'} font-medium`}>Quality</div>
       <ToggleGroup
         disabled={isBest}
-        value={[video.custom.videoFormat.format]}
-        onValueChange={function (value) {
-          updatePreference('video.custom.videoFormat.format', value[0])
+        value={[format]}
+        onValueChange={function ([value]) {
+          updatePreference('video.custom.videoFormat.format', value)
         }}
       >
         {QUALITIES.map(function (quality) {

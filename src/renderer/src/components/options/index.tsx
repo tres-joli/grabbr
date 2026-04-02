@@ -15,6 +15,8 @@ import { SortingTab } from './sorting-tab'
 export function Options() {
   const { preferences } = usePreferences()
 
+  const { type } = preferences
+
   return (
     <Dialog>
       <DialogTrigger
@@ -25,7 +27,7 @@ export function Options() {
         }
       />
       <DialogContent className="min-w-2xl min-h-136">
-        <Tabs defaultValue={preferences.type}>
+        <Tabs defaultValue={type}>
           <TabsList>
             <TabsTrigger value="audio">Audio</TabsTrigger>
             <TabsTrigger value="video">Video</TabsTrigger>

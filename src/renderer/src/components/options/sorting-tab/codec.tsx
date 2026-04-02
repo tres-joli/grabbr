@@ -1,13 +1,14 @@
+import { VideoCodecEnum } from '../../../../../shared/constants/ytdlp'
 import { ToggleGroup, ToggleGroupItem } from '../../ui/toggle-group'
 import { usePreferences } from '@renderer/components/providers/preferences'
 
-const CONTAINERS: { value: FormatSortMap['vcodec']; name: string }[] = [
+const CONTAINERS: { value: VideoCodecEnum; name: string }[] = [
   {
-    value: 'h264',
+    value: VideoCodecEnum.H264,
     name: 'H264'
   },
   {
-    value: 'hevc',
+    value: VideoCodecEnum.H265,
     name: 'H265'
   }
 ]
@@ -15,16 +16,16 @@ const CONTAINERS: { value: FormatSortMap['vcodec']; name: string }[] = [
 export function Codec() {
   const { preferences, updatePreference } = usePreferences()
 
-  const { video, sortFormat } = preferences
+  const { enabled, vcodec } = preferences.video.custom.videoFormat.formatSort
 
   return (
     <div className="space-y-1">
-      <div className={`${!sortFormat && 'opacity-50'} font-medium`}>Codec</div>
+      <div className={`${!enabled && 'opacity-50'} font-medium`}>Codec</div>
       <ToggleGroup
-        disabled={!sortFormat}
-        value={[video.custom.videoFormat.formatSort.vcodec!]}
-        onValueChange={function (value) {
-          updatePreference('video.custom.videoFormat.formatSort.vcodec', value[0] as any)
+        disabled={!enabled}
+        value={[vcodec]}
+        onValueChange={function ([value]) {
+          updatePreference('video.custom.videoFormat.formatSort.vcodec', value as VideoCodecEnum)
         }}
       >
         {CONTAINERS.map(function (container) {

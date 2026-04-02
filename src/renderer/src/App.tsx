@@ -12,8 +12,9 @@ import { isValidUrl } from '../../shared/utils'
 
 export function App() {
   const [url, setUrl] = useState('')
-  const { preferences, prefLoading } = usePreferences()
+  const { preferences, updatePreference, prefLoading } = usePreferences()
 
+  // Hook for IPC listeners
   useIpc()
 
   async function startDownload() {
@@ -24,38 +25,30 @@ export function App() {
     }
 
     try {
-      let directoryPath: string | null = null
-      const { downloadMode, downloadDirectory } = preferences
+      const { downloadMode, base } = preferences
       switch (downloadMode) {
         case 'ask': {
           const selectedPath = await window.api.selectFolder()
           if (!selectedPath) {
             return
           } else {
-            directoryPath = `${selectedPath}/%(title)s.%(ext)s`
+            updatePreference('base.filesystem.output', selectedPath)
           }
           break
         }
 
         case 'select': {
-          if (!downloadDirectory) {
+          if (base.filesystem.output.length < 1) {
             toast.error('Download location not set', { richColors: true })
             return
-          } else {
-            directoryPath = `${downloadDirectory}/%(title)s.%(ext)s`
           }
         }
       }
 
-      if (!directoryPath) {
-        toast.error('Please select a download folder first', { richColors: true })
-        return
-      }
-
-      window.api.startDownload(normalizedUrl, directoryPath)
+      window.api.startDownload(normalizedUrl)
       setUrl('')
     } catch {
-      toast.error('Something went wrong in a download', { richColors: true })
+      toast.error('Something went wrong', { richColors: true })
     }
   }
 

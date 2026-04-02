@@ -1,9 +1,9 @@
 import { ipcMain } from 'electron'
-import { cancelDownload, startDownload } from '../controller/download'
+import { cancelDownload, startDownload } from '../services/download'
 
 export function registerDownloadIpc(win: Electron.BrowserWindow) {
-  ipcMain.on('start-download', function (_event, url: string, directoryPath: string) {
-    startDownload(url, directoryPath, {
+  ipcMain.on('start-download', function (_event, url: string) {
+    startDownload(url, {
       onInit: function (id) {
         win.webContents.send('download-init', { id })
       },

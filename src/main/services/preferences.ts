@@ -6,10 +6,11 @@ export function getPreferences() {
 
 export function setPreference<K extends keyof PreferenceMap>(key: K, value: PreferenceMap[K]) {
   console.info('store:', key, '-', value)
+
   store.set(key, value)
 }
 
 export function clearPreferences() {
   console.info('Preferences cleared')
-  store.clear()
+  store.reset('type', 'base', 'audio', 'video', 'downloadMode')
 }

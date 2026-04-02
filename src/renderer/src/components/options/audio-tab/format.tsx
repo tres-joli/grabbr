@@ -1,10 +1,11 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '../../ui/tooltip'
 import { ToggleGroup, ToggleGroupItem } from '../../ui/toggle-group'
 import { usePreferences } from '../../providers/preferences'
+import { AudioFormatEnum } from '../../../../../shared/constants/ytdlp'
 
-const formats = [
+const formats: { value: AudioFormatEnum; name: string; content: React.ReactNode }[] = [
   {
-    value: 'flac',
+    value: AudioFormatEnum.FLAC,
     name: 'FLAC',
     content: (
       <>
@@ -18,7 +19,7 @@ const formats = [
     )
   },
   {
-    value: 'alac',
+    value: AudioFormatEnum.ALAC,
     name: 'ALAC',
     content: (
       <>
@@ -32,7 +33,7 @@ const formats = [
     )
   },
   {
-    value: 'wav',
+    value: AudioFormatEnum.WAV,
     name: 'WAV',
     content: (
       <>
@@ -46,7 +47,7 @@ const formats = [
     )
   },
   {
-    value: 'opus',
+    value: AudioFormatEnum.OPUS,
     name: 'OPUS',
     content: (
       <>
@@ -60,7 +61,7 @@ const formats = [
     )
   },
   {
-    value: 'm4a',
+    value: AudioFormatEnum.M4A,
     name: 'M4A',
     content: (
       <>
@@ -74,7 +75,7 @@ const formats = [
     )
   },
   {
-    value: 'mp3',
+    value: AudioFormatEnum.MP3,
     name: 'MP3',
     content: (
       <>
@@ -88,7 +89,7 @@ const formats = [
     )
   },
   {
-    value: 'vorbis',
+    value: AudioFormatEnum.VORBIS,
     name: 'VORBIS',
     content: (
       <>
@@ -106,17 +107,18 @@ const formats = [
 export function Format() {
   const { preferences, updatePreference } = usePreferences()
 
-  const { audio } = preferences
-  const isBest = audio.preset === 'best'
+  const { audioFormat } = preferences.audio.custom.postProcessing
+
+  const isBest = preferences.audio.preset === 'best'
 
   return (
     <div className="space-y-1">
       <div className={`${isBest && 'opacity-50'} font-medium`}>Format</div>
       <ToggleGroup
         disabled={isBest}
-        value={[audio.custom.postProcessing.audioFormat]}
-        onValueChange={function (value) {
-          updatePreference('audio.custom.postProcessing.audioFormat', value[0] as any)
+        value={[audioFormat]}
+        onValueChange={function ([value]) {
+          updatePreference('audio.custom.postProcessing.audioFormat', value as AudioFormatEnum)
         }}
       >
         {formats.map(function (format) {

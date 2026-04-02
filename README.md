@@ -8,8 +8,11 @@ Grabbr is a desktop multimedia downloader built with Electron, React, and TypeSc
 - Audio and video download modes with persistent preferences
 - Audio presets plus custom output controls for FLAC, ALAC, WAV, OPUS, M4A, MP3, and VORBIS
 - Video presets plus custom quality selection from 144p up to 4320p and MP4 or MKV output
+- Video sorting preferences for prioritizing H.264 or H.265 sources before other selection rules
+- Optional post-download video re-encoding with configurable encoder and codec choices
 - Optional metadata and chapter embedding
 - Download location modes for asking every time or using a saved folder
+- Theme switching plus resettable saved options
 - Native folder and file pickers, cancelable downloads, and "Show in Folder" actions
 - In-app `yt-dlp` version checking and updating
 - Packaged app auto-update support through `electron-updater`
@@ -19,7 +22,7 @@ Grabbr is a desktop multimedia downloader built with Electron, React, and TypeSc
 
 - Electron 41
 - React 19
-- TypeScript 5
+- TypeScript 6
 - electron-vite
 - Tailwind CSS 4
 - Bun
@@ -84,6 +87,8 @@ bun run start
 bun run build
 ```
 
+`bun run build` runs the repo typechecks before bundling the Electron app.
+
 ### Package for a platform
 
 ```bash
@@ -91,6 +96,8 @@ bun run build:win
 bun run build:mac
 bun run build:linux
 ```
+
+These commands create platform-specific packages using the current project build output.
 
 ### Create an unpacked build
 
@@ -104,7 +111,7 @@ Packaged output is written to `dist/`.
 
 - `bun run dev` starts Electron and the renderer in development mode
 - `bun run start` previews the current built app
-- `bun run build` typechecks and builds the app
+- `bun run build` runs both TypeScript checks and builds the app
 - `bun run build:win` creates a Windows package
 - `bun run build:mac` creates a macOS package
 - `bun run build:linux` creates Linux packages
@@ -127,12 +134,25 @@ Packaged output is written to `dist/`.
 
 - `Best` preset for fast highest-quality MP4 downloads
 - `Custom` preset with selectable resolution and container
+- Optional sorting rules to prefer H.264 or H.265 compatible sources
 - Optional metadata and chapter embedding
+
+### Sorting
+
+- Prefer H.264 or H.265 formats before the usual quality selection logic
+- Useful when you want better compatibility without enabling re-encoding
+
+### Encoding
+
+- Optional re-encoding for downloaded video
+- Configurable encoder and output codec selections
+- Best described as an advanced workflow because it can be slow and resource-intensive
 
 ### General
 
 - System, light, and dark themes
 - Ask every time or reuse a selected download folder
+- Reset saved options back to defaults
 
 ### Updates
 
@@ -144,7 +164,8 @@ Packaged output is written to `dist/`.
 
 - Select a `cookies.txt` file for cases where rate limits block downloads
 - Treat this feature carefully because the file may contain sensitive account data
+- Grabbr deletes the selected `cookies.txt` file after a download flow, so do not point it at your only copy
 
 ## Releases
 
-GitHub Actions builds draft releases for Windows, macOS, and Linux from version tags matching `v*.*.*`.
+GitHub Actions builds draft releases for Windows, macOS, and Linux when version tags matching `v*.*.*` are pushed.

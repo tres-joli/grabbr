@@ -8,7 +8,7 @@ import { usePreferences } from '../providers/preferences'
 export function ExperimentalTab() {
   const { preferences, updatePreference } = usePreferences()
 
-  const { cookiesFilePath } = preferences
+  const { base } = preferences
 
   async function chooseCookiesFilePath() {
     try {
@@ -17,7 +17,7 @@ export function ExperimentalTab() {
         extensions: ['txt']
       })
       if (selectedFilePath) {
-        updatePreference('cookiesFilePath', selectedFilePath)
+        updatePreference('base.filesystem.cookies', selectedFilePath)
         toast.warning('Cookies File Selected', { richColors: true })
       }
     } catch {
@@ -26,7 +26,7 @@ export function ExperimentalTab() {
   }
 
   async function removeCookiesFilePath() {
-    updatePreference('cookiesFilePath', '')
+    updatePreference('base.filesystem.cookies', '')
   }
 
   function openLink(url: string): void {
@@ -89,12 +89,12 @@ export function ExperimentalTab() {
               size="sm"
               variant="outline"
               className="w-fit"
-              onClick={!cookiesFilePath ? chooseCookiesFilePath : removeCookiesFilePath}
+              onClick={!base.filesystem.cookies ? chooseCookiesFilePath : removeCookiesFilePath}
             >
               <HugeiconsIcon icon={Folder01Icon} className="mr-0.5" />
-              {!cookiesFilePath ? 'Select' : 'Remove'}
+              {!base.filesystem.cookies ? 'Select' : 'Remove'}
             </Button>
-            <span className="text-xs">{cookiesFilePath}</span>
+            <span className="text-xs">{base.filesystem.cookies}</span>
           </div>
         </div>
       </CardContent>
